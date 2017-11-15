@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Animated, ScrollView, StyleSheet, View } from 'react-native';
 import _ from 'lodash';
-
+let scrollBounces;
 export type Props = {
   children?: ?React$Element<any>,
   childrenStyle?: ?any,
@@ -118,6 +118,16 @@ class ImageHeaderScrollView extends Component<Props, State> {
     });
   }
 
+  scrollBounces() {
+    let scrollBounces=true;
+    return (scrollBounces)
+  }
+
+  notScrollBounces() {
+    let scrollBounces=false;
+    return (scrollBounces)
+  }
+
   renderHeader() {
     const overlayOpacity = this.interpolateOnImageHeight([
       this.props.minOverlayOpacity,
@@ -134,6 +144,9 @@ class ImageHeaderScrollView extends Component<Props, State> {
       height: this.props.maxHeight,
       transform: [{ scale: headerScale }],
     };
+
+    this.scrollBounces()
+
 
     const overlayStyle = [
       styles.overlay,
@@ -158,7 +171,7 @@ class ImageHeaderScrollView extends Component<Props, State> {
       extrapolate: 'clamp',
     });
     const opacity = this.interpolateOnImageHeight([1, -0.3]);
-
+    this.notScrollBounces()
     const headerTransformStyle = {
       height: this.props.maxHeight,
       transform: [{ translateY: headerTranslate }],
