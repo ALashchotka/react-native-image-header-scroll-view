@@ -66,7 +66,7 @@ class ImageHeaderScrollView extends Component<Props, State> {
   }
 
   componentDidMount() {
-    this.state.scrollY.addListener(({ value }) => {
+    this.scrollListenerId = this.state.scrollY.addListener(({ value }) => {
       if (value > this.props.maxHeight) {
         this.setState({ bounces: true });
         return;
@@ -74,6 +74,10 @@ class ImageHeaderScrollView extends Component<Props, State> {
         this.setState({ bounces: false });
       }
     });
+  }
+
+  componentWillUnmount() {
+    this.state.scrollY.removeListener(this.scrollListenerId);
   }
 
   getChildContext() {
