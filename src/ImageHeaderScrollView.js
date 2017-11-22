@@ -49,7 +49,7 @@ class ImageHeaderScrollView extends Component<Props, State> {
     foregroundParallaxRatio: 1,
     maxHeight: 100,
     maxOverlayOpacity: 0.3,
-    minHeight: 65,
+    minHeight: 68,
     minOverlayOpacity: 0,
     renderFixedForeground: () => <View />,
     renderForeground: () => <View />,
