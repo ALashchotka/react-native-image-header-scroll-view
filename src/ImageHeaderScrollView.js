@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Animated, ScrollView, StyleSheet, View } from 'react-native';
 import _ from 'lodash';
+let scrollBounces;
 export type Props = {
   children?: ?React$Element<any>,
   childrenStyle?: ?any,
@@ -35,7 +36,6 @@ export type DefaultProps = {
 export type State = {
   scrollY: Animated.Value,
   pageY: number,
-  bounces: boolean,
 };
 
 class ImageHeaderScrollView extends Component<Props, State> {
@@ -49,7 +49,7 @@ class ImageHeaderScrollView extends Component<Props, State> {
     foregroundParallaxRatio: 1,
     maxHeight: 100,
     maxOverlayOpacity: 0.3,
-    minHeight: 68,
+    minHeight: 65,
     minOverlayOpacity: 0,
     renderFixedForeground: () => <View />,
     renderForeground: () => <View />,
@@ -61,23 +61,7 @@ class ImageHeaderScrollView extends Component<Props, State> {
     this.state = {
       scrollY: new Animated.Value(0),
       pageY: 0,
-      bounces: false,
     };
-  }
-
-  componentDidMount() {
-    this.scrollListenerId = this.state.scrollY.addListener(({ value }) => {
-      if (value > this.props.maxHeight) {
-        this.setState({ bounces: true });
-        return;
-      } else {
-        this.setState({ bounces: false });
-      }
-    });
-  }
-
-  componentWillUnmount() {
-    this.state.scrollY.removeListener(this.scrollListenerId);
   }
 
   getChildContext() {
@@ -134,6 +118,16 @@ class ImageHeaderScrollView extends Component<Props, State> {
     });
   }
 
+  scrollBounces() {
+    let scrollBounces=true;
+    return (scrollBounces)
+  }
+
+  notScrollBounces() {
+    let scrollBounces=false;
+    return (scrollBounces)
+  }
+
   renderHeader() {
     const overlayOpacity = this.interpolateOnImageHeight([
       this.props.minOverlayOpacity,
@@ -150,6 +144,9 @@ class ImageHeaderScrollView extends Component<Props, State> {
       height: this.props.maxHeight,
       transform: [{ scale: headerScale }],
     };
+
+    this.scrollBounces()
+
 
     const overlayStyle = [
       styles.overlay,
@@ -174,6 +171,7 @@ class ImageHeaderScrollView extends Component<Props, State> {
       extrapolate: 'clamp',
     });
     const opacity = this.interpolateOnImageHeight([1, -0.3]);
+    this.notScrollBounces()
     const headerTransformStyle = {
       height: this.props.maxHeight,
       transform: [{ translateY: headerTranslate }],
@@ -264,7 +262,6 @@ class ImageHeaderScrollView extends Component<Props, State> {
             onScroll={Animated.event([
               { nativeEvent: { contentOffset: { y: this.state.scrollY } } },
             ])}
-            bounces={this.state.bounces}
             {...scrollViewProps}
           >
             <Animated.View style={childrenContainerStyle}>
