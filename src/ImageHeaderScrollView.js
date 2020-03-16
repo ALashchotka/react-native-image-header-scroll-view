@@ -18,6 +18,7 @@ export type Props = {
   renderForeground: () => React$Element<any>,
   renderHeader: () => React$Element<any>,
   renderTouchableFixedForeground?: ?() => React$Element<any>,
+  isTouchableFixedForegroundAnimated: boolean,
 };
 
 export type DefaultProps = {
@@ -31,6 +32,7 @@ export type DefaultProps = {
   renderFixedForeground: () => React$Element<any>,
   renderForeground: () => React$Element<any>,
   renderHeader: () => React$Element<any>,
+  isTouchableFixedForegroundAnimated: boolean,
 };
 
 export type State = {
@@ -54,6 +56,7 @@ class ImageHeaderScrollView extends Component<Props, State> {
     renderFixedForeground: () => <View />,
     renderForeground: () => <View />,
     renderHeader: () => <View />,
+    isTouchableFixedForegroundAnimated: true,
   };
 
   constructor(props: Props) {
@@ -188,12 +191,12 @@ class ImageHeaderScrollView extends Component<Props, State> {
     const height = this.interpolateOnImageHeight([this.props.maxHeight, this.props.minHeight]);
     const opacity = this.state.scrollY.interpolate({
       inputRange: [this.props.minHeight, this.props.maxHeight],
-      outputRange: [0, 1],
+      outputRange: [this.props.isTouchableFixedForegroundAnimated ? 0 : 1, 1],
       extrapolate: 'clamp',
     });
     const headerScale = this.state.scrollY.interpolate({
       inputRange: [-this.props.maxHeight, 0],
-      outputRange: [3, 1],
+      outputRange: [this.props.isTouchableFixedForegroundAnimated ? 3 : 1, 1],
       extrapolate: 'clamp',
     });
 
